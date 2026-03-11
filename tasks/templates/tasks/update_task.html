@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Update Task</title>
+</head>
+<body>
+
+<h2>Update Task</h2>
+
+<form method="POST" action="/api/tasks/update/{{ task.id }}">
+
+    <label>Title:</label><br>
+    <input type="text" name="title" value="{{ task.title }}"><br><br>
+
+    <label>Description:</label><br>
+    <input type="text" name="description" value="{{ task.description }}"><br><br>
+
+    <label>Due Date:</label><br>
+    <input type="date" name="due_date" value="{{ task.due_date }}"><br><br>
+
+    <label>Status:</label><br>
+    <select name="status">
+        <option value="pending">Pending</option>
+        <option value="completed">Completed</option>
+    </select><br><br>
+
+    <button type="submit">Update Task</button>
+
+</form>
+
+</body>
+</html>

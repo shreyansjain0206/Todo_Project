@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Add Task</title>
+</head>
+
+<body>
+
+<h1>Add Task</h1>
+
+<form method="post">
+
+{% csrf_token %}
+
+<input name="title" placeholder="Task Title"><br><br>
+
+<input name="description" placeholder="Description"><br><br>
+
+<input name="due_date" type="date"><br><br>
+
+<button type="submit">Add Task</button>
+
+</form>
+
+</body>
+</html>
