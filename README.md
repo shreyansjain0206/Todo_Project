@@ -229,6 +229,10 @@ Logging is implemented using Python's `logging` module. Logs capture:
 - Task deletion
 - API errors and exceptions
 
+<img width="305" height="88" alt="image" src="https://github.com/user-attachments/assets/e8897150-7962-437f-ac4f-8645cf93a59e" />
+
+<img width="294" height="36" alt="image" src="https://github.com/user-attachments/assets/3b794ae6-fb36-47cf-b5bc-ae62e53d9147" />
+
 ---
 
 ## ⚠️ Exception Handling
