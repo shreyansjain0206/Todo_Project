@@ -4,7 +4,8 @@ from django.test import Client
 from django.db import connection
 
 client = Client()
-
+# Sets up a fresh tasks table before each test so nothing bleeds between runs.
+# The IF NOT EXISTS guard means it won't explode if the table's already there.
 @pytest.fixture(autouse=True)
 def create_tasks_table():
     with connection.cursor() as cursor:
@@ -18,6 +19,8 @@ def create_tasks_table():
         )
         """)
 
+# Fires a POST request with a full task payload and checks the API accepts it cleanly.
+# Confirms both the status code and the success message come back as expected.
 @pytest.mark.django_db
 def test_create_task():
 
@@ -31,13 +34,14 @@ def test_create_task():
     response = client.post(
         "/api/tasks/create",
         data=json.dumps(payload),
-        content_type="application/json"
+        content_type="application/json."
     )
 
     assert response.status_code == 200
     assert response.json()["message"] == "Task created successfully"
 
-
+# Seeds one task directly into the DB, then asks the API to return the full list.
+# Makes sure the response is a list — even if it only has one item in it.
 @pytest.mark.django_db
 def test_get_tasks():
 
@@ -53,6 +57,8 @@ def test_get_tasks():
     assert isinstance(response.json(), list)
 
 
+# Inserts a task with old data, then sends updated values through the API.
+# Verifies the endpoint responds with 200 and confirms the update went through.
 @pytest.mark.django_db
 def test_update_task():
 
@@ -77,7 +83,8 @@ def test_update_task():
     assert response.status_code == 200
     assert response.json()["message"] == "Task updated successfully"
 
-
+# Creates a throwaway task just to have something real to delete.
+# Hits the delete endpoint and checks the task was removed without any errors
 @pytest.mark.django_db
 def test_delete_task():
 
@@ -92,4 +99,5 @@ def test_delete_task():
     response = client.post(f"/api/tasks/delete/{task_id}")
 
     assert response.status_code == 200
+
     assert response.json()["message"] == "Task deleted successfully"
