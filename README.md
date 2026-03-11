@@ -1,4 +1,4 @@
-# Todo_Project
+# To-do Project
 
 ## Overview
 This project is a To-Do List Web Application built using Python and Django. It provides RESTful APIs for managing tasks and a web interface using Django templates.
