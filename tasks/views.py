@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-# Create your views here.
+
 import json
 import logging
 from django.http import JsonResponse
@@ -11,7 +11,8 @@ from django.shortcuts import render, redirect
 
 
 logger = logging.getLogger(__name__)
-
+# Fetches a single task by ID and loads the delete confirmation page.
+# Think of this as the "are you sure?" screen before wiping a task for good.
 def delete_task_page(request, task_id):
 
     with connection.cursor() as cursor:
@@ -28,6 +29,9 @@ def delete_task_page(request, task_id):
 
     return render(request, "tasks/delete_task.html", {"task": task})
 
+
+# Grabs an existing task's data and pre-fills the update form with it.
+# Saves the user from retyping everything just to change one field.    
 def update_task_page(request, task_id):
 
     with connection.cursor() as cursor:
@@ -43,6 +47,9 @@ def update_task_page(request, task_id):
     }
 
     return render(request, "tasks/update_task.html", {"task": task})
+
+# Pulls every task from the database and renders them in a list view.
+# This is the main page where users see everything on their plate.
 def task_page(request):
 
     with connection.cursor() as cursor:
@@ -63,6 +70,8 @@ def task_page(request):
     return render(request, "tasks/task_list.html", {"tasks": tasks})
 
 
+# Handles both showing the "add task" form and processing its submission.
+# On POST, it saves the new task and bounces the user back to the task list.
 def add_task_page(request):
 
     if request.method == "POST":
@@ -72,7 +81,7 @@ def add_task_page(request):
         due_date = request.POST.get("due_date")
 
         with connection.cursor() as cursor:
-            cursor.execute(
+            cursor. execute(
                 queries.CREATE_TASK,
                 [title, description, due_date, "pending"]
             )
@@ -80,7 +89,8 @@ def add_task_page(request):
         return redirect("/tasks")
 
     return render(request, "tasks/add_task.html")
-
+# API endpoint that accepts a JSON payload and creates a brand-new task.
+# Returns a success message or a 500 if something goes sideways.
 @csrf_exempt
 def create_task(request):
 
@@ -111,6 +121,8 @@ def create_task(request):
             }, status=500)
 
     return JsonResponse({"error": "POST request required"}, status=400)
+# Fetches all tasks from the database and returns them as a JSON list.
+# Handy for any frontend or external service that needs the full task feed.
 def get_tasks(request):
 
     try:
@@ -137,6 +149,8 @@ def get_tasks(request):
         return JsonResponse({
             "error": "Failed to retrieve tasks"
         }, status=500)
+# Takes updated field values from a POST form and applies them to an existing task.
+# Logs the change and lets the caller know if the update succeeded or failed.
 @csrf_exempt
 def update_task(request, task_id):
 
@@ -166,6 +180,9 @@ def update_task(request, task_id):
             }, status=500)
 
     return JsonResponse({"error": "POST request required"}, status=400)
+
+# Permanently removes a task from the database using its ID.
+# Once it's gone, it's gone — logs the action either way
 @csrf_exempt
 def delete_task(request, task_id):
 
@@ -183,7 +200,8 @@ def delete_task(request, task_id):
             logger.error(f"Error deleting task {task_id}: {str(e)}")
 
             return JsonResponse({
-                "error": "Failed to delete task"
+                "error": "Failed to delete task."
             }, status=500)
+
 
     return JsonResponse({"error": "POST request required"}, status=400)
