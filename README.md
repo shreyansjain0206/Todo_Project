@@ -217,6 +217,8 @@ Tests cover:
 - Update task API
 - Delete task API
 
+<img width="1597" height="153" alt="image" src="https://github.com/user-attachments/assets/9e5d112f-e913-4d09-940f-51cb0a597aff" />
+
 ---
 
 ## 📊 Logging
