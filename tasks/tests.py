@@ -1,9 +1,11 @@
 import pytest
 import json
-from django.test import Client
+from django.test import Client 
 from django.db import connection
 
-client = Client()
+client = Client()#Creates a fake browser once — used in all tests to send requests
+
+
 # Sets up a fresh tasks table before each test so nothing bleeds between runs.
 # The IF NOT EXISTS guard means it won't explode if the table's already there.
 @pytest.fixture(autouse=True)
@@ -46,7 +48,7 @@ def test_create_task():
 def test_get_tasks():
 
     with connection.cursor() as cursor:
-        cursor.execute(
+        cursor. execute(
             "INSERT INTO tasks (title, description, due_date, status) VALUES (%s,%s,%s,%s)",
             ["Sample Task", "Sample Desc", "2026-03-20", "pending"]
         )
@@ -63,7 +65,7 @@ def test_get_tasks():
 def test_update_task():
 
     with connection.cursor() as cursor:
-        cursor.execute(
+        cursor. execute(
             "INSERT INTO tasks (title, description, due_date, status) VALUES (%s,%s,%s,%s)",
             ["Old Task", "Old Desc", "2026-03-20", "pending"]
         )
