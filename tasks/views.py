@@ -18,16 +18,20 @@ def delete_task_page(request, task_id):
     with connection.cursor() as cursor:
         cursor.execute("SELECT * FROM tasks WHERE id=%s", [task_id])
         row = cursor.fetchone()
+#fetchone() → retrieves one row from the query result.
 
+#The result is returned as a tuple.
     task = {
         "id": row[0],
         "title": row[1],
         "description": row[2],
         "due_date": row[3],
         "status": row[4]
-    }
+    }# it converts a tuple to a dict as it is easy to load into Html template
 
-    return render(request, "tasks/delete_task.html", {"task": task})
+    return render(request, "tasks/delete_task.html", {"task": task}) 
+    #render() → Django function that loads an HTML template.
+   # {"task": task} → context data sent to the template.
 
 
 # Grabs an existing task's data and pre-fills the update form with it.
@@ -105,7 +109,7 @@ def create_task(request):
             status = data.get("status")
 
             with connection.cursor() as cursor:
-                cursor.execute(
+                cursor. execute(
                     queries.CREATE_TASK,
                     [title, description, due_date, status]
                 )
@@ -118,7 +122,7 @@ def create_task(request):
             logger.error(f"Error creating task: {str(e)}")
 
             return JsonResponse({
-                "error": "Failed to create task"
+                "error": "Failed to create task."
             }, status=500)
 
     return JsonResponse({"error": "POST request required"}, status=400)
@@ -148,7 +152,7 @@ def get_tasks(request):
         logger.error(f"Error fetching tasks: {str(e)}")
 
         return JsonResponse({
-            "error": "Failed to retrieve tasks"
+            "error": "Failed to retrieve tasks."
         }, status=500)
 # Takes updated field values from a POST form and applies them to an existing task.
 # Logs the change and lets the caller know if the update succeeded or failed.
@@ -164,7 +168,7 @@ def update_task(request, task_id):
             status = request.POST.get("status")
 
             with connection.cursor() as cursor:
-                cursor.execute(
+                cursor. execute(
                     queries.UPDATE_TASK,
                     [title, description, due_date, status, task_id]
                 )
@@ -177,7 +181,7 @@ def update_task(request, task_id):
             logger.error(f"Error updating task {task_id}: {str(e)}")
 
             return JsonResponse({
-                "error": "Failed to update task"
+                "error": "Failed to update task."
             }, status=500)
 
     return JsonResponse({"error": "POST request required"}, status=400)
@@ -206,3 +210,7 @@ def delete_task(request, task_id):
 
 
     return JsonResponse({"error": "POST request required"}, status=400)
+
+
+
+#One set of functions renders HTML templates for browser-based interaction, while the other set exposes REST-style API endpoints that return JSON responses. The HTML views are used for server-side rendered pages, while the APIs allow external clients such as mobile apps or frontend frameworks to interact with the same backend.
