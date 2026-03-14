@@ -92,6 +92,7 @@ def add_task_page(request):
 # API endpoint that accepts a JSON payload and creates a brand-new task.
 # Returns a success message or a 500 if something goes sideways.
 @csrf_exempt
+#skip Django's security token check — used on API endpoints because external apps don't have that token 🎯
 def create_task(request):
 
     if request.method == "POST":
